@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>QR Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <script src="https://unpkg.com/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
+
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.12);
+      --primary: #38bdf8;
+      --success: #22c55e;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #111827, var(--bg));
+      font-family: Inter, system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .card {
+      width: 100%;
+      max-width: 380px;
+      background: var(--card);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      outline: none;
+    }
+
+    input::placeholder { color: var(--muted); }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 15px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 14px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #020617;
+    }
+
+    .qr-section {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px dashed var(--border);
+      text-align: center;
+    }
+
+    #qr {
+      margin-bottom: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-secondary {
+      flex: 1;
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+    }
+
+    .btn-success {
+      flex: 1;
+      background: var(--success);
+      color: #052e16;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="title">QR Code Generator</div>
+    <div class="subtitle">Instant. Fast. No backend.</div>
+
+    <input id="input" placeholder="Type text or paste link" />
+    <button class="btn-primary" onclick="generateQR()">Generate QR</button>
+
+    <div class="qr-section" id="qrSection" style="display:none;">
+      <div id="qr"></div>
+
+      <div class="actions">
+        <button class="btn-secondary" onclick="copyQR()">Copy</button>
+        <button class="btn-success" onclick="shareQR()">Share</button>
+      </div>
+
+      <div class="hint">Scan using phone camera</div>
+    </div>
+  </div>
+
+<script>
+  const qr = new QRCodeStyling({
+    width: 220,
+    height: 220,
+    type: "svg",
+    dotsOptions: { color: "#000", type: "rounded" },
+    backgroundOptions: { color: "#ffffff" }
+  });
+
+  function generateQR() {
+    const value = document.getElementById("input").value.trim();
+    if (!value) return alert("Enter something");
+
+    qr.update({ data: value });
+    document.getElementById("qr").innerHTML = "";
+    qr.append(document.getElementById("qr"));
+    document.getElementById("qrSection").style.display = "block";
+  }
+
+  async function copyQR() {
+    const svg = document.querySelector("#qr svg");
+    const blob = new Blob([svg.outerHTML], { type: "image/svg+xml" });
+    await navigator.clipboard.write([new ClipboardItem({ "image/svg+xml": blob })]);
+    alert("QR copied to clipboard");
+  }
+
+  async function shareQR() {
+    const svg = document.querySelector("#qr svg");
+    const blob = new Blob([svg.outerHTML], { type: "image/svg+xml" });
+    const file = new File([blob], "qr.svg", { type: "image/svg+xml" });
+
+    if (navigator.share) {
+      navigator.share({
+        files: [file],
+        title: "QR Code",
+        text: "Scan this QR"
+      });
+    } else {
+      alert("Share not supported on this device");
+    }
+  }
+</script>
+
+</body>
+</html>
