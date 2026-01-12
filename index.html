@@ -9,13 +9,14 @@
 
   <style>
     :root {
-      --bg: #0b1220;
-      --card: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.12);
-      --primary: #38bdf8;
-      --success: #22c55e;
-      --text: #e5e7eb;
-      --muted: #94a3b8;
+      --bg: #10223a;
+      --card: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.18);
+      --primary: #f9b233;
+      --success: #ffffff;
+      --text: #ffffff;
+      --muted: #bfcad9;
+      --logo: #f9b233;
     }
 
     * { box-sizing: border-box; }
@@ -23,8 +24,8 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background: radial-gradient(circle at top, #111827, var(--bg));
-      font-family: Inter, system-ui, sans-serif;
+      background: var(--bg);
+      font-family: 'Segoe UI', Inter, system-ui, sans-serif;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -35,23 +36,32 @@
       width: 100%;
       max-width: 380px;
       background: var(--card);
-      backdrop-filter: blur(14px);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      border-radius: 18px;
+      padding: 32px 28px 28px 28px;
+      box-shadow: 0 20px 50px rgba(16,34,58,0.7);
+      text-align: center;
     }
 
     .title {
-      font-size: 22px;
-      font-weight: 600;
+      font-size: 28px;
+      font-weight: 700;
       margin-bottom: 6px;
+      letter-spacing: 1px;
+      color: var(--text);
+    }
+
+    .title .accent {
+      color: var(--primary);
+      font-family: inherit;
+      font-weight: 700;
     }
 
     .subtitle {
-      font-size: 14px;
+      font-size: 16px;
       color: var(--muted);
       margin-bottom: 22px;
+      font-style: italic;
     }
 
     input {
@@ -80,7 +90,12 @@
 
     .btn-primary {
       background: var(--primary);
-      color: #020617;
+      color: #10223a;
+      box-shadow: 0 2px 8px rgba(249,178,51,0.15);
+      transition: background 0.2s;
+    }
+    .btn-primary:hover {
+      background: #e09c1b;
     }
 
     .qr-section {
@@ -101,14 +116,28 @@
 
     .btn-secondary {
       flex: 1;
-      background: rgba(255,255,255,0.08);
-      color: var(--text);
+      background: var(--primary);
+      color: #10223a;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(249,178,51,0.10);
+      transition: background 0.2s;
+    }
+    .btn-secondary:hover {
+      background: #e09c1b;
     }
 
     .btn-success {
       flex: 1;
       background: var(--success);
-      color: #052e16;
+      color: #10223a;
+      font-weight: 600;
+      border: 1px solid var(--primary);
+      box-shadow: 0 2px 8px rgba(249,178,51,0.10);
+      transition: background 0.2s;
+    }
+    .btn-success:hover {
+      background: #f9b233;
+      color: #10223a;
     }
 
     .hint {
@@ -116,16 +145,120 @@
       color: var(--muted);
       margin-top: 10px;
     }
+
+    .customize-section {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .customize-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--primary);
+    }
+
+    .control-group {
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .control-group label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .control-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    select, input[type="color"], input[type="range"] {
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    select option {
+      background: var(--bg);
+      color: var(--text);
+      padding: 4px 8px;
+    }
+
+    input[type="color"] {
+      width: 40px;
+      height: 32px;
+      padding: 2px;
+      cursor: pointer;
+    }
+
+    input[type="range"] {
+      flex: 1;
+    }
+
+    .size-display {
+      font-size: 12px;
+      color: var(--muted);
+      min-width: 40px;
+    }
   </style>
 </head>
 <body>
 
   <div class="card">
-    <div class="title">QR Code Generator</div>
-    <div class="subtitle">Instant. Fast. No backend.</div>
+    <img src="logo-arise.png" alt="Arise Logo" style="height:64px;margin-bottom:18px;" />
+    <div class="title"><span class="accent">A</span>RISE QR Generator</div>
+    <div class="subtitle">"Where the growth begins"</div>
 
     <input id="input" placeholder="Type text or paste link" />
     <button class="btn-primary" onclick="generateQR()">Generate QR</button>
+
+    <div class="customize-section">
+      <div class="customize-title">Customize QR Code</div>
+      
+      <div class="control-group">
+        <label>Dot Style</label>
+        <select id="dotStyle">
+          <option value="rounded">Rounded</option>
+          <option value="square">Square</option>
+          <option value="dots">Dots</option>
+          <option value="classy">Classy</option>
+          <option value="classy-rounded">Classy Rounded</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>Corner Style</label>
+        <select id="cornerStyle">
+          <option value="square">Square</option>
+          <option value="extra-rounded">Extra Rounded</option>
+          <option value="dot">Dot</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>Colors</label>
+        <div class="control-row">
+          <input type="color" id="foregroundColor" value="#000000" title="Foreground">
+          <input type="color" id="backgroundColor" value="#ffffff" title="Background">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>Size</label>
+        <div class="control-row">
+          <input type="range" id="qrSize" min="150" max="300" value="220">
+          <span class="size-display" id="sizeDisplay">220px</span>
+        </div>
+      </div>
+    </div>
 
     <div class="qr-section" id="qrSection" style="display:none;">
       <div id="qr"></div>
@@ -140,19 +273,51 @@
   </div>
 
 <script>
-  const qr = new QRCodeStyling({
+  let qr = new QRCodeStyling({
     width: 220,
     height: 220,
     type: "svg",
     dotsOptions: { color: "#000", type: "rounded" },
-    backgroundOptions: { color: "#ffffff" }
+    backgroundOptions: { color: "#ffffff" },
+    cornersSquareOptions: { type: "square" }
+  });
+
+  // Update size display
+  document.getElementById('qrSize').addEventListener('input', function() {
+    document.getElementById('sizeDisplay').textContent = this.value + 'px';
   });
 
   function generateQR() {
     const value = document.getElementById("input").value.trim();
     if (!value) return alert("Enter something");
 
-    qr.update({ data: value });
+    // Get basic customization values
+    const dotStyle = document.getElementById('dotStyle').value;
+    const cornerStyle = document.getElementById('cornerStyle').value;
+    const foregroundColor = document.getElementById('foregroundColor').value;
+    const backgroundColor = document.getElementById('backgroundColor').value;
+    const size = parseInt(document.getElementById('qrSize').value);
+
+    // Update QR code with simple settings
+    qr.update({
+      data: value,
+      width: size,
+      height: size,
+      dotsOptions: {
+        color: foregroundColor,
+        type: dotStyle
+      },
+      backgroundOptions: {
+        color: backgroundColor
+      },
+      cornersSquareOptions: {
+        type: cornerStyle
+      },
+      cornersDotOptions: {
+        type: cornerStyle
+      }
+    });
+    
     document.getElementById("qr").innerHTML = "";
     qr.append(document.getElementById("qr"));
     document.getElementById("qrSection").style.display = "block";
